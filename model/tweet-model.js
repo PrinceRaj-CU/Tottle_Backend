@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 const TweetSchema = new mongoose.Schema({
   name: { type: String},
   description: { type: String },
-  email: { type: String,  },
-  userImage: { type: String,  },
+  email: { type: String ,unique: false   },
+  userImage: { type: String },
   image: {
     public_id: {
       type: String
@@ -20,7 +20,8 @@ const TweetSchema = new mongoose.Schema({
   },
   userOwner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    ref: "users",
+    unique:false
     
   }
 });

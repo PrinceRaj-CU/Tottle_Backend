@@ -5,4 +5,4 @@ import tweetRouter from "./tweetRoutes.js";
 router.use("/auth",userRouter);
 router.use("/tweet", tweetRouter)
 
-export default router;
+export default router; 

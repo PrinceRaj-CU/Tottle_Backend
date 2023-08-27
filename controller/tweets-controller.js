@@ -5,13 +5,15 @@ import cloudinary from "../utils/cloudinary.js";
 export const createTweet = asyncHandler(async (req, res) => {
     
     try {
-        
+        var img="";
+         console.log("ff");
         const { image, description  ,userOwner} = req.body;
-        let userDetail = await UserModel.findById(userOwner);
-        console.log("userdetail", userDetail);
-        const img= await cloudinary.uploader.upload(image,{ folder:"post"})
+        console.log("body",req.body);
+        const userDetail = await UserModel.findById(userOwner);
+        console.log(userDetail);
+        if(image){ img= await cloudinary.uploader.upload(image,{ folder:"post"})}
        
-        const tweetData={name:userDetail.name,
+        const tweetData= {name:userDetail.name,
             email:userDetail.email,
             image:{ public_id: img.public_id,
             url: img.secure_url},
@@ -21,13 +23,7 @@ export const createTweet = asyncHandler(async (req, res) => {
 
         console.log("tddd",tweetData);
         const newTweet = await TweetModel.create(
-            {name:userDetail.name,
-                email:userDetail.email,
-                image:{ public_id: img.public_id,
-                url: img.secure_url},
-                userImage:userDetail.image.url,
-                description,
-                userOwner}
+            tweetData
         );
         await newTweet.save();
         res.json({message:"Posted"});
@@ -44,7 +40,7 @@ export const getTweet = asyncHandler(async (req, res, next) => {
     console.log(req.body)
     try {
         
-        let tweets = await TweetModel.find({ });
+        let tweets = await TweetModel.find({ }).sort({ date: -1 });
         res.json( tweets);
         
 

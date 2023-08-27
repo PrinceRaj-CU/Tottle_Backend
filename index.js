@@ -7,19 +7,19 @@ import dotenv from "dotenv"
 import router from "./router/router.js";
 dotenv.config();
 const app=express();
-
-app.use(express.json());
 app.use(cors()); 
+app.use(express.json({limit:"30mb"}));
+
 
 app.get('/', function (req, res) { 
     res.send('Api is working!');
-})
-
+}) 
+ 
 import mongoseConnection from "./dbconfig.js";
 mongoseConnection();
 app.use("/api/v1", router);
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT} `); 
-});
-     
+}); 
+        

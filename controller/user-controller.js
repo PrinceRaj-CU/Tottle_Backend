@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import cloudinary from "../utils/cloudinary.js";
 import { UserModel } from "../model/user-model.js";
 export const createUser = asyncHandler(async (req, res) => {
-    console.log(req.body)
+    
     try {
         const { name, email, password ,image} = req.body;
 
@@ -48,17 +48,6 @@ export const loginUser = asyncHandler(async (req, res, next) => {
    const hPassword=await bcrypt.compare(password,user.password);
    if(!hPassword){
    return res.json({message:"Wrong Password"});}
-   const token= jwt.sign({id:user._id}, "predator");
+   const token= jwt.sign({id:user._id}, process.env.JWT_SECRET_KEY);
    res.json({token, userDetail:{ name: user.name, email: user.email, image: user.image.url}, userID:user._id});
 });
-export const verifyToken=(req,res,next)=>{
-    const token= req.headers.authorization;
-    if(token){
-      jwt.verify(token,"predator",(err)=>{
-        if(err) return res.sendStatus(403);
-        next();
-      });
-
-    }
-    else{ res.sendStatus(401);}
-   };
