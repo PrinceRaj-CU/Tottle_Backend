@@ -2,15 +2,16 @@ import asyncHandler from "express-async-handler";
 import { TweetModel } from "../model/tweet-model.js";
 import { UserModel } from "../model/user-model.js";
 import cloudinary from "../utils/cloudinary.js";
+import { response } from "express";
 export const createTweet = asyncHandler(async (req, res) => {
     
     try {
         var img="";
-         console.log("ff");
+         
         const { image, description  ,userOwner} = req.body;
-        console.log("body",req.body);
+        
         const userDetail = await UserModel.findById(userOwner);
-        console.log(userDetail);
+       
         if(image){ img= await cloudinary.uploader.upload(image,{ folder:"post"})}
        
         const tweetData= {name:userDetail.name,
@@ -21,7 +22,7 @@ export const createTweet = asyncHandler(async (req, res) => {
             description,
             userOwner}
 
-        console.log("tddd",tweetData);
+        
         const newTweet = await TweetModel.create(
             tweetData
         );
@@ -37,7 +38,7 @@ export const createTweet = asyncHandler(async (req, res) => {
     }
 });
 export const getTweet = asyncHandler(async (req, res, next) => {
-    console.log(req.body)
+    
     try {
         
         let tweets = await TweetModel.find({ }).sort({ date: -1 });
@@ -51,3 +52,45 @@ export const getTweet = asyncHandler(async (req, res, next) => {
         });
     }
 });
+
+
+export const likeVal= asyncHandler(async (req,res)=>{
+    try {
+      
+         const array =twe
+      
+
+    }
+    catch (err) {
+        res.json({likeError:err.message});
+    }
+
+})
+
+
+export const likefn= asyncHandler(async (req,res)=>{
+    try {
+       
+         const data = await TweetModel.find({$and:[{_id: req.params.id}, {likes: req.body.id}]});
+        
+       if(data.length>=1){
+        console.log("fail");
+        const data = await TweetModel.updateOne({ _id:req.params.id}, { $pull: { likes: req.body.id } });
+        console.log("false");
+        res.json({value:"deleted"});
+        
+       }
+       if(data.length==0){  
+        console.log("pass");
+        const data = await TweetModel.updateOne({ _id:req.params.id}, { $push: { likes: req.body.id } });
+        console.log("true");
+        res.json({value:"added"});
+       }
+      
+ 
+    }
+    catch (err) {
+        res.json({likeError:err.message});
+    }
+
+})

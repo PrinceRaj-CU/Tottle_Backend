@@ -1,8 +1,9 @@
 import express from "express";
-import { createTweet, getTweet } from "../controller/tweets-controller.js";
+import { createTweet, getTweet ,likefn} from "../controller/tweets-controller.js";
 import {verifyToken} from '../middleware/reqAuth.js'
 const tweetRouter= express.Router();
 
-tweetRouter.route("/").post(createTweet).get( getTweet);
+tweetRouter.route("/").post( verifyToken, createTweet).get( getTweet);
+tweetRouter.route("/:id").put(likefn);
 
  export default tweetRouter; 

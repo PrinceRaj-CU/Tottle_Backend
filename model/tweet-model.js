@@ -23,6 +23,9 @@ const TweetSchema = new mongoose.Schema({
     ref: "users",
     unique:false
     
-  }
+  },
+  likes: [{ type: mongoose.Schema.Types.ObjectId,
+    unique:true,
+    ref: "users",}]
 });
 export const TweetModel = mongoose.model("tweets", TweetSchema);
