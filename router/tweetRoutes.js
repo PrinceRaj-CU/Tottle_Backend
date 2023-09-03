@@ -4,6 +4,6 @@ import {verifyToken} from '../middleware/reqAuth.js'
 const tweetRouter= express.Router();
 
 tweetRouter.route("/").post( verifyToken, createTweet).get( getTweet);
-tweetRouter.route("/:id").put(likefn);
+tweetRouter.route("/:id").put(verifyToken,likefn);
 
  export default tweetRouter; 
