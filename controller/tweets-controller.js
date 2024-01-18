@@ -3,6 +3,7 @@ import { TweetModel } from "../model/tweet-model.js";
 import { UserModel } from "../model/user-model.js";
 import cloudinary from "../utils/cloudinary.js";
 import { response } from "express";
+import { skip } from "node:test";
 export const createTweet = asyncHandler(async (req, res) => {
     
     try {
@@ -27,7 +28,7 @@ export const createTweet = asyncHandler(async (req, res) => {
             tweetData
         );
         await newTweet.save();
-        res.json({message:"Posted"});
+        res.json(newTweet);
         
 
     } catch (error) {
@@ -40,8 +41,14 @@ export const createTweet = asyncHandler(async (req, res) => {
 export const getTweet = asyncHandler(async (req, res, next) => {
     
     try {
+
+        const {limit,offset}= req.query;
+        console.log(limit,offset);
         
-        let tweets = await TweetModel.find({ }).sort({ date: -1 });
+        let tweets = await TweetModel.find({ } )
+        .skip(offset)
+        .limit(limit)
+        .sort({ date: -1 });
         res.json( tweets);
         
 
@@ -93,4 +100,51 @@ export const likefn= asyncHandler(async (req,res)=>{
         res.json({likeError:err.message});
     }
 
+})
+
+export const comment= asyncHandler(async(req,res)=>{
+ 
+    try {
+        const {comment,id}=req.body;
+        const userDetail = await UserModel.findById(req.params.id);
+        const data = await TweetModel.updateOne({ _id:id}, { $push: { Comment: {user: req.params.id,
+            text: comment,
+            name: userDetail.name,
+            userImage: userDetail.image.url}}});
+        res.json({value:"added"});
+    } catch (error) {
+        res.json({commentError:error.message});
+    }
+
+
+});
+
+export const getComment= asyncHandler(async(req,res)=>{
+     
+        try {
+            const data = await TweetModel.find({ _id:req.params.id});
+            res.json(data);
+        } catch (error) {
+            res.json({commentError:error.message});
+        }
+});
+export const deleteComment= asyncHandler(async(req,res)=>{
+         
+        try {
+            const data = await TweetModel.updateOne({ _id:req.params.id}, { $pull: { Comment: {_id:req.body.id}}});
+            res.json({value:"deleted"});
+        } catch (error) {
+            res.json({commentError:error.message});
+        }
+});
+
+export const deleteTweet= asyncHandler(async(req,res)=>{
+    try {
+        const id=req.params.id;
+        console.log(id);
+        const data = await TweetModel.findByIdAndDelete({ _id:id});
+        res.status(202).json({value:"deleted" ,deletedData:data});
+    } catch (error) {
+        res.json({error,failde:"fail ho gya"});
+    }
 })

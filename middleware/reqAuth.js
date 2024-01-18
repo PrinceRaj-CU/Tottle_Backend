@@ -4,6 +4,7 @@ export const verifyToken= (req,res,next)=>{
     const authorization = req.headers['authorization'];
    
     if(!authorization){
+        console.log("auth not found");
         return res.status(401).json({ 
             message:"auth not found"
         });

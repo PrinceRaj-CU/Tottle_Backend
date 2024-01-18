@@ -26,6 +26,28 @@ const TweetSchema = new mongoose.Schema({
   },
   likes: [{ type: mongoose.Schema.Types.ObjectId,
     unique:true,
-    ref: "users",}]
+    ref: "users",}],
+  Comment:[
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+      },
+      userImage: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    }
+  ]
 });
 export const TweetModel = mongoose.model("tweets", TweetSchema);

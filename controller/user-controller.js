@@ -15,26 +15,23 @@ export const createUser = asyncHandler(async (req, res) => {
                 .json({ success: false, message: "User already exists" });
         }
         const img= await cloudinary.uploader.upload(image,{ folder:"userimage"})
-        const hashedPassword=await bcrypt.hash(password,10);
+        const hashedPassword= await bcrypt.hash(password,10);
         const newUser = await UserModel.create({
             name,
             email,
             password:hashedPassword,
             image:{ public_id: img.public_id,
                  url: img.secure_url},
-            
-
         });
         await newUser.save();
         res.json({message:"user registered!"});
-        
-
-    } catch (error) {
+        } 
+    catch (error) {
         res.status(500).json({
             success: false,
             message: error.message,
         });
-    }
+    } 
 })
 
 // Login User
@@ -45,7 +42,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     if(!user){ return res.json({message:"User does not Exist"});
         }
    
-   const hPassword=await bcrypt.compare(password,user.password);
+   const hPassword= await bcrypt.compare(password,user.password);
    if(!hPassword){
    return res.json({message:"Wrong Password"});}
    const token= jwt.sign({id:user._id}, process.env.JWT_SECRET_KEY);
