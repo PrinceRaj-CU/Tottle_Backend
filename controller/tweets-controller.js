@@ -39,9 +39,7 @@ export const createTweet = asyncHandler(async (req, res) => {
     }
 });
 export const getTweet = asyncHandler(async (req, res, next) => {
-    
     try {
-
         const {limit,offset}= req.query;
         console.log(limit,offset);
         
@@ -49,9 +47,7 @@ export const getTweet = asyncHandler(async (req, res, next) => {
         .skip(offset)
         .limit(limit)
         .sort({ date: -1 });
-        res.json( tweets);
-        
-
+        res.json( tweets);        
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -59,33 +55,27 @@ export const getTweet = asyncHandler(async (req, res, next) => {
         });
     }
 });
-
-
 export const likeVal= asyncHandler(async (req,res)=>{
     try {
-      
-         const array =twe
-      
+       console.log("hubu",req.body.id);
+        const data = await TweetModel.find({$and:[{_id: req.params.id}, {likes: req.body.id}]});
 
+           
+        if(data.length>=1){  res.json({value:true}); }
+        if(data.length==0){ res.json({value:false}); }
     }
     catch (err) {
         res.json({likeError:err.message});
     }
-
-})
-
-
+});
 export const likefn= asyncHandler(async (req,res)=>{
-    try {
-       
-         const data = await TweetModel.find({$and:[{_id: req.params.id}, {likes: req.body.id}]});
-        
+    try {       
+         const data = await TweetModel.find({$and:[{_id: req.params.id}, {likes: req.body.id}]});        
        if(data.length>=1){
         console.log("fail");
         const data = await TweetModel.updateOne({ _id:req.params.id}, { $pull: { likes: req.body.id } });
         console.log("false");
-        res.json({value:"deleted"});
-        
+        res.json({value:"deleted"});        
        }
        if(data.length==0){  
         console.log("pass");
@@ -93,17 +83,12 @@ export const likefn= asyncHandler(async (req,res)=>{
         console.log("true");
         res.json({value:"added"});
        }
-      
- 
     }
     catch (err) {
         res.json({likeError:err.message});
     }
-
-})
-
+});
 export const comment= asyncHandler(async(req,res)=>{
- 
     try {
         const {comment,id}=req.body;
         const userDetail = await UserModel.findById(req.params.id);
@@ -147,4 +132,5 @@ export const deleteTweet= asyncHandler(async(req,res)=>{
     } catch (error) {
         res.json({error,failde:"fail ho gya"});
     }
-})
+});
+
