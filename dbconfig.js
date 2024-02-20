@@ -8,8 +8,8 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 // CONNECTION
 import mongoose from "mongoose";
 mongoose.set('strictQuery', false);
-
-const CONNECTION_URL = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.hyvxf3x.mongodb.net/?retryWrites=true&w=majority`
+//mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.vqxywue.mongodb.net/?retryWrites=true&w=majority
+const CONNECTION_URL = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.vqxywue.mongodb.net/?retryWrites=true&w=majority`
 const connectionOption = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
